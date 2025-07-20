@@ -39,14 +39,14 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* 圖標樣式 */
 #menu li::before {
-    content: '';
+    content: "";
     width: 20px;
     height: 20px;
     background-size: contain;
@@ -57,22 +57,67 @@ body {
 }
 
 /* 不同選單項目的圖標 */
-#menu li:nth-child(1)::before { content: ''; font-size: 18px; width: auto; height: auto; }
-#menu li:nth-child(2)::before { content: '🖼️'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(3)::before { content: '📁'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(4)::before { content: '⚙️'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(5)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(6)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(7)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(8)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
-#menu li:nth-child(9)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(1)::before {
+    content: "";
+    font-size: 18px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(2)::before {
+    content: "🖼️";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(3)::before {
+    content: "📁";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(4)::before {
+    content: "⚙️";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(5)::before {
+    content: "🧩";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(6)::before {
+    content: "🧩";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(7)::before {
+    content: "🧩";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(8)::before {
+    content: "🧩";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
+#menu li:nth-child(9)::before {
+    content: "🧩";
+    font-size: 16px;
+    width: auto;
+    height: auto;
+}
 
 #menu li:hover {
     background: rgba(0, 0, 0, 0.9);
     border-color: rgba(255, 255, 255, 0.25);
     color: rgba(255, 255, 255, 1);
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -85,7 +130,7 @@ body {
     transform: translateY(0);
     background: rgba(0, 0, 0, 0.95);
     color: rgba(255, 255, 255, 0.9);
-    box-shadow: 
+    box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.3),
         inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -102,7 +147,7 @@ body {
     height: 60px;
     border-radius: 30px;
     padding: 0;
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -112,7 +157,7 @@ body {
     color: rgba(255, 255, 255, 1);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-3px);
-    box-shadow: 
+    box-shadow:
         0 12px 32px rgba(0, 0, 0, 0.6),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
@@ -121,7 +166,7 @@ body {
     background: rgba(0, 0, 0, 1);
     color: rgba(255, 255, 255, 0.9);
     transform: translateY(-1px);
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(0, 0, 0, 0.4),
         inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -155,7 +200,7 @@ body {
     background: rgba(0, 0, 0, 0.9);
     border-color: rgba(255, 255, 255, 0.4);
     color: rgba(255, 255, 255, 1);
-    box-shadow: 
+    box-shadow:
         0 0 0 2px rgba(255, 255, 255, 0.2),
         0 4px 16px rgba(0, 0, 0, 0.4);
 }
@@ -180,23 +225,23 @@ body {
     #menu {
         gap: 0;
     }
-    
+
     /* 小屏幕時隱藏除第一個外的所有選單項目 */
     #menu li:not(:first-child) {
         display: none;
     }
-    
+
     /* 展開狀態 */
     #menu.open li:not(:first-child) {
         display: flex;
     }
-    
+
     /* 小屏幕選單項目樣式調整 */
     #menu li {
         min-width: 250px;
         margin-bottom: 8px;
     }
-    
+
     /* 漢堡按鈕在小屏幕的樣式 */
     #menu li:first-child {
         width: 50px;
@@ -204,7 +249,7 @@ body {
         border-radius: 25px;
         margin-bottom: 12px;
     }
-    
+
     #menu li:first-child::before {
         font-size: 16px;
     }
@@ -273,7 +318,7 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 999;
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -281,7 +326,7 @@ body {
 .theme-toggle:hover {
     background: rgba(0, 0, 0, 0.9);
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.3);
@@ -357,4 +402,22 @@ body.light-mode .theme-toggle {
     display: none;
     overflow: hidden;
     position: absolute;
+}
+
+@keyframes rotate3DTwice {
+    0% {
+        transform: translate(-50%, -50%) rotateY(0deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotateY(180deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotateY(360deg);
+    }
+}
+
+.puzzle-complete-animation {
+    animation: rotate3DTwice 2s ease-in-out;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
