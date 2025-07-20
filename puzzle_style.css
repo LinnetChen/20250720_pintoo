@@ -1,0 +1,360 @@
+body {
+    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
+    background-color: #221f30;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    cursor: pointer;
+}
+
+/* 響應式選單設計 */
+#menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    list-style-type: none;
+    padding: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 大屏幕選單項目 */
+#menu li {
+    margin: 0;
+    padding: 16px 20px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* 圖標樣式 */
+#menu li::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* 不同選單項目的圖標 */
+#menu li:nth-child(1)::before { content: ''; font-size: 18px; width: auto; height: auto; }
+#menu li:nth-child(2)::before { content: '🖼️'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(3)::before { content: '📁'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(4)::before { content: '⚙️'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(5)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(6)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(7)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(8)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+#menu li:nth-child(9)::before { content: '🧩'; font-size: 16px; width: auto; height: auto; }
+
+#menu li:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#menu li:hover::before {
+    opacity: 1;
+}
+
+#menu li:active {
+    transform: translateY(0);
+    background: rgba(0, 0, 0, 0.95);
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 第一個選單項目（漢堡選單按鈕）特殊樣式 */
+#menu li:first-child {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    justify-content: center;
+    min-width: auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    padding: 0;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+#menu li:first-child:hover {
+    background: rgba(0, 0, 0, 0.95);
+    color: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+#menu li:first-child:active {
+    background: rgba(0, 0, 0, 1);
+    color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#menu select {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 6px 12px;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+#menu select:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#menu select:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 
+        0 0 0 2px rgba(255, 255, 255, 0.2),
+        0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* 選單收起/展開功能 */
+#menu li:not(:first-child) {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+#menu.open li:not(:first-child) {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    animation: slideIn 0.3s ease forwards;
+}
+
+/* 響應式設計 */
+@media (max-width: 600px) {
+    #menu {
+        gap: 0;
+    }
+    
+    /* 小屏幕時隱藏除第一個外的所有選單項目 */
+    #menu li:not(:first-child) {
+        display: none;
+    }
+    
+    /* 展開狀態 */
+    #menu.open li:not(:first-child) {
+        display: flex;
+    }
+    
+    /* 小屏幕選單項目樣式調整 */
+    #menu li {
+        min-width: 250px;
+        margin-bottom: 8px;
+    }
+    
+    /* 漢堡按鈕在小屏幕的樣式 */
+    #menu li:first-child {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        margin-bottom: 12px;
+    }
+    
+    #menu li:first-child::before {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 601px) {
+    /* 大屏幕時可以收起/展開選單 */
+    #menu li:not(:first-child) {
+        display: flex;
+    }
+}
+
+/* 動畫效果 */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 拼圖完成3D翻轉動畫 */
+@keyframes puzzleComplete {
+    0% {
+        transform: perspective(1000px) rotateY(0deg) scale(1);
+    }
+    25% {
+        transform: perspective(1000px) rotateY(180deg) scale(1.1);
+    }
+    50% {
+        transform: perspective(1000px) rotateY(360deg) scale(1);
+    }
+    75% {
+        transform: perspective(1000px) rotateY(540deg) scale(1.1);
+    }
+    100% {
+        transform: perspective(1000px) rotateY(720deg) scale(1);
+    }
+}
+
+.puzzle-complete-animation {
+    animation: puzzleComplete 3s ease-in-out;
+    transform-style: preserve-3d;
+}
+
+/* 黑暗模式切換按鈕 */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+    background: rgba(0, 0, 0, 1);
+}
+
+/* 亮色模式樣式 */
+body.light-mode {
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+body.light-mode #forPuzzle {
+    background-color: #ffffff;
+}
+
+body.light-mode #menu li {
+    background: rgba(255, 255, 255, 0.9);
+    color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode #menu li:hover {
+    background: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 1);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode #menu li:first-child {
+    background: rgba(100, 140, 220, 0.8);
+    color: rgba(255, 255, 255, 1);
+}
+
+body.light-mode #menu select {
+    background: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .theme-toggle {
+    background: rgba(255, 255, 255, 0.9);
+    color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+#forPuzzle {
+    position: absolute;
+    width: 95vw;
+    height: 95vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #221f30;
+    overflow: hidden;
+}
+
+.polypiece {
+    display: block;
+    overflow: hidden;
+    position: absolute;
+}
+
+.moving {
+    transition-property: top, left;
+    transition-duration: 1s;
+    transition-timing-function: linear;
+}
+
+.gameCanvas {
+    display: none;
+    overflow: hidden;
+    position: absolute;
+}
