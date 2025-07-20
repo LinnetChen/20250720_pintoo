@@ -10,6 +10,9 @@ const mhypot = Math.hypot,
   mfloor = Math.floor,
   msqrt = Math.sqrt,
   mabs = Math.abs;
+this.backImage = new Image();
+this.backImage.src = "back.jpg"; // 換你想要的圖
+
 //-----------------------------------------------------------------------------
 function isMiniature() {
   return location.pathname.includes("/fullcpgrid/");
@@ -704,6 +707,22 @@ class PolyPiece {
       this.ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
       this.ctx.stroke(path);
 
+      this.ctx.globalCompositeOperation = "destination-over";
+      // 1. 填色
+      // this.ctx.fillStyle = '#f5f5f5';
+      // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      // 2. 或畫上背面圖片（你需準備好 `puzzle.backImage`）
+      if (puzzle.backImage) {
+        this.ctx.drawImage(
+          puzzle.backImage,
+          0,
+          0,
+          this.canvas.width,
+          this.canvas.height
+        );
+      }
+
       this.ctx.translate(-puzzle.embossThickness, puzzle.embossThickness);
       this.ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
       this.ctx.stroke(path);
@@ -1104,7 +1123,7 @@ class Puzzle {
     const menuWidth = window.innerWidth <= 600 ? 70 : 280; // 小屏漢堡按鈕或大屏完整選單
     const menuHeight = window.innerWidth <= 600 ? 70 : 450; // 預估選單高度
     const menuMargin = 30; // 額外邊距
-    
+
     // extreme values for 1 piece polypieces，避開選單區域
     const minx = Math.max(-this.scalex / 2, menuWidth + menuMargin);
     const miny = -this.scaley / 2;
@@ -1271,7 +1290,7 @@ let loadFile;
 } //  // scope for loadFile
 
 function loadInitialFile() {
-  puzzle.srcImage.src = "baby1.jpg";
+  puzzle.srcImage.src = "Jinu_2.jpg";
 }
 //-----------------------------------------------------------------------------
 function imageLoaded(puzzle) {
@@ -1580,24 +1599,24 @@ let menu = (function () {
   });
 
   menu.open = function () {
-    const menuElement = document.getElementById('menu');
-    menuElement.classList.add('open');
+    const menuElement = document.getElementById("menu");
+    menuElement.classList.add("open");
     menu.opened = true;
   };
   menu.close = function () {
-    const menuElement = document.getElementById('menu');
-    menuElement.classList.remove('open');
+    const menuElement = document.getElementById("menu");
+    menuElement.classList.remove("open");
     menu.opened = false;
   };
-  
+
   // 選單收起/展開控制（所有屏幕尺寸）
   menu.items[0].element.addEventListener("click", () => {
     if (menu.opened) menu.close();
     else menu.open();
   });
-  
+
   // 視窗大小改變時的處理
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     // 保持當前狀態，不自動關閉
   });
   menu.items[1].element.addEventListener("click", loadInitialFile);
@@ -1624,22 +1643,38 @@ window.addEventListener("resize", (event) => {
 
 // 華麗煙火特效函數
 function createFireworks() {
-  const colors = ['#ff1744', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', 
-                  '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
-  const gradients = [
-    'radial-gradient(circle, #ff1744, #ff5722)',
-    'radial-gradient(circle, #e91e63, #9c27b0)',
-    'radial-gradient(circle, #3f51b5, #2196f3)',
-    'radial-gradient(circle, #00bcd4, #4caf50)',
-    'radial-gradient(circle, #ffeb3b, #ff9800)'
+  const colors = [
+    "#ff1744",
+    "#e91e63",
+    "#9c27b0",
+    "#673ab7",
+    "#3f51b5",
+    "#2196f3",
+    "#03a9f4",
+    "#00bcd4",
+    "#009688",
+    "#4caf50",
+    "#8bc34a",
+    "#cddc39",
+    "#ffeb3b",
+    "#ffc107",
+    "#ff9800",
+    "#ff5722",
   ];
-  
+  const gradients = [
+    "radial-gradient(circle, #ff1744, #ff5722)",
+    "radial-gradient(circle, #e91e63, #9c27b0)",
+    "radial-gradient(circle, #3f51b5, #2196f3)",
+    "radial-gradient(circle, #00bcd4, #4caf50)",
+    "radial-gradient(circle, #ffeb3b, #ff9800)",
+  ];
+
   // 創建更多煙火爆炸點
   for (let i = 0; i < 20; i++) {
     setTimeout(() => {
       const x = Math.random() * window.innerWidth;
       const y = Math.random() * window.innerHeight * 0.7;
-      
+
       // 每個爆炸點創建更多粒子
       for (let j = 0; j < 30; j++) {
         const particle = document.createElement("div");
@@ -1647,44 +1682,51 @@ function createFireworks() {
         particle.style.position = "fixed";
         particle.style.left = x + "px";
         particle.style.top = y + "px";
-        
+
         // 更大的粒子尺寸
         const size = 8 + Math.random() * 12;
         particle.style.width = size + "px";
         particle.style.height = size + "px";
         particle.style.borderRadius = "50%";
-        
+
         // 使用漸層背景
         if (Math.random() > 0.5) {
-          particle.style.background = gradients[Math.floor(Math.random() * gradients.length)];
+          particle.style.background =
+            gradients[Math.floor(Math.random() * gradients.length)];
         } else {
-          particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
         }
-        
+
         particle.style.pointerEvents = "none";
         particle.style.zIndex = "9999";
-        particle.style.boxShadow = `0 0 ${size * 3}px ${colors[Math.floor(Math.random() * colors.length)]}`;
-        
+        particle.style.boxShadow = `0 0 ${size * 3}px ${
+          colors[Math.floor(Math.random() * colors.length)]
+        }`;
+
         // 隨機方向和更大距離
         const angle = (j / 30) * 2 * Math.PI + Math.random() * 0.8;
         const distance = 100 + Math.random() * 250;
         const endX = x + Math.cos(angle) * distance;
         const endY = y + Math.sin(angle) * distance + Math.random() * 80; // 添加重力效果
-        
+
         // 設定動畫
-        particle.style.transition = "all 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        particle.style.transition =
+          "all 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
         particle.style.opacity = "1";
-        
+
         document.body.appendChild(particle);
-        
+
         // 觸發動畫
         setTimeout(() => {
           particle.style.left = endX + "px";
           particle.style.top = endY + "px";
           particle.style.opacity = "0";
-          particle.style.transform = `scale(0) rotate(${Math.random() * 720}deg)`;
+          particle.style.transform = `scale(0) rotate(${
+            Math.random() * 720
+          }deg)`;
         }, 10);
-        
+
         // 清理粒子
         setTimeout(() => {
           if (particle.parentNode) {
@@ -1692,7 +1734,7 @@ function createFireworks() {
           }
         }, 2600);
       }
-      
+
       // 添加星形爆炸效果
       for (let k = 0; k < 12; k++) {
         const star = document.createElement("div");
@@ -1709,46 +1751,47 @@ function createFireworks() {
         star.style.boxShadow = "0 0 15px #ffffff";
         star.style.transition = "all 1.5s ease-out";
         star.style.opacity = "1";
-        
+
         document.body.appendChild(star);
-        
+
         setTimeout(() => {
           star.style.opacity = "0";
           star.style.transform = `rotate(${k * 30}deg) scale(4)`;
         }, 10);
-        
+
         setTimeout(() => {
           if (star.parentNode) {
             star.remove();
           }
         }, 1600);
       }
-      
+
       // 添加圓形波紋效果
       for (let w = 0; w < 3; w++) {
         const wave = document.createElement("div");
         wave.style.position = "fixed";
-        wave.style.left = (x - 20) + "px";
-        wave.style.top = (y - 20) + "px";
+        wave.style.left = x - 20 + "px";
+        wave.style.top = y - 20 + "px";
         wave.style.width = "40px";
         wave.style.height = "40px";
-        wave.style.border = "3px solid " + colors[Math.floor(Math.random() * colors.length)];
+        wave.style.border =
+          "3px solid " + colors[Math.floor(Math.random() * colors.length)];
         wave.style.borderRadius = "50%";
         wave.style.pointerEvents = "none";
         wave.style.zIndex = "9998";
         wave.style.transition = "all 2s ease-out";
         wave.style.opacity = "0.8";
-        
+
         document.body.appendChild(wave);
-        
+
         setTimeout(() => {
           wave.style.width = "300px";
           wave.style.height = "300px";
-          wave.style.left = (x - 150) + "px";
-          wave.style.top = (y - 150) + "px";
+          wave.style.left = x - 150 + "px";
+          wave.style.top = y - 150 + "px";
           wave.style.opacity = "0";
         }, w * 200 + 10);
-        
+
         setTimeout(() => {
           if (wave.parentNode) {
             wave.remove();
