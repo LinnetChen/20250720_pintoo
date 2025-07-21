@@ -1,0 +1,382 @@
+/* 編譯後的 CSS - 從 _puzzle_style.scss 生成 */
+
+/* 基礎樣式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Microsoft JhengHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* 深色主題 */
+body.dark-theme {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.dark-theme #forPuzzle {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+body.dark-theme #menu {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: transparent;
+  color: #333;
+}
+
+body.dark-theme #menu li {
+  color: #333;
+}
+
+body.dark-theme #menu li:hover:not(:first-child) {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+body.dark-theme .theme-toggle {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #333;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .theme-toggle:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 淺色主題 */
+body.light-theme {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+body.light-theme #forPuzzle {
+  background: #ffffff;
+  border-color: #333;
+}
+
+body.light-theme #menu {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #333;
+  color: #333;
+}
+
+body.light-theme #menu li {
+  color: #333;
+}
+
+body.light-theme #menu li:hover:not(:first-child) {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+body.light-theme .theme-toggle {
+  background: rgba(50, 50, 50, 0.9);
+  border-color: #fff;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .theme-toggle:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 拼圖容器 */
+#forPuzzle {
+  width: 90vw;
+  max-width: 800px;
+  height: 67.5vw;
+  max-height: 600px;
+  margin: 20px auto;
+  border: 2px solid;
+  border-radius: 15px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* 選單樣式 */
+#menu {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  border: 2px solid;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  list-style: none;
+  min-width: 200px;
+  max-width: 300px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#menu li {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+}
+
+#menu li:last-child {
+  border-bottom: none;
+}
+
+#menu li:first-child {
+  font-size: 18px;
+  text-align: center;
+  background: rgba(0, 123, 255, 0.1);
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+}
+
+#menu li:hover:not(:first-child) {
+  transform: translateX(-2px);
+}
+
+#menu li:active {
+  transform: scale(0.98);
+}
+
+/* 滾動條樣式 */
+#menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+#menu::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+#menu::-webkit-scrollbar-thumb {
+  background: rgba(0, 123, 255, 0.5);
+  border-radius: 3px;
+}
+
+#menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 123, 255, 0.7);
+}
+
+/* 選擇框樣式 */
+#shape {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 4px 8px;
+  margin-left: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+#shape:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.light-theme #shape {
+  border-color: #333;
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle .theme-icon {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(20deg);
+}
+
+/* 拼圖片樣式 */
+.polypiece {
+  position: absolute;
+  cursor: grab;
+  transition: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.polypiece:hover {
+  filter: brightness(1.05);
+  transform: scale(1.02);
+}
+
+.polypiece:active {
+  cursor: grabbing;
+}
+
+.polypiece.moving {
+  transition: all 1s ease-out;
+  z-index: 999;
+}
+
+/* 載入動畫 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 18px;
+  color: #666;
+}
+
+.loading::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid #666;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+/* 完成動畫 */
+.puzzle-complete {
+  animation: puzzleComplete 2s ease-in-out;
+}
+
+/* 動畫定義 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes puzzleComplete {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(2deg); }
+  50% { transform: scale(1.02) rotate(-2deg); }
+  75% { transform: scale(1.05) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 平板響應式設計 (≤900px) */
+@media (max-width: 900px) {
+  #forPuzzle {
+    width: 95vw;
+    height: 71.25vw;
+    margin: 10px auto;
+  }
+  
+  #menu {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
+    min-width: auto;
+    max-height: 60vh;
+  }
+  
+  #menu li {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .theme-toggle {
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+/* 手機響應式設計 (≤600px) */
+@media (max-width: 600px) {
+  #forPuzzle {
+    margin: 5px auto;
+    border-radius: 10px;
+  }
+  
+  #menu {
+    top: 5px;
+    right: 5px;
+    left: 5px;
+    border-radius: 8px;
+    max-height: 50vh;
+  }
+  
+  #menu li {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  #menu li:first-child {
+    font-size: 16px;
+  }
+  
+  #shape {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  
+  .theme-toggle {
+    bottom: 15px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+}
+
+/* 低高度螢幕 */
+@media (max-height: 600px) {
+  #menu {
+    max-height: 40vh;
+  }
+  
+  #forPuzzle {
+    margin: 5px auto;
+  }
+}
+
+/* 高對比度支援 */
+@media (prefers-contrast: high) {
+  #menu {
+    border-width: 3px;
+  }
+  
+  .theme-toggle {
+    border-width: 3px;
+  }
+}
+
+/* 減少動畫偏好支援 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

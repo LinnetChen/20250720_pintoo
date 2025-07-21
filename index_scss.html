@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼圖遊戲 - SCSS版</title>
+    <link rel="stylesheet" href="css/_puzzle_style.css">
+</head>
+
+<body>
+    <div id="forPuzzle"></div>
+    
+    <ul id="menu">
+        <li>&#x2630;</li>
+        <li>default image</li>
+        <li>load image</li>
+        <li>shape: <select id="shape">
+                <option value="1" selected>classic</option>
+                <option value="2">triangle</option>
+                <option value="3">round</option>
+                <option value="4">straight</option>
+            </select></li>
+        <li>12 pieces</li>
+        <li>25 pieces</li>
+        <li>50 pieces</li>
+        <li>100 pieces</li>
+        <li>200 pieces</li>
+    </ul>
+
+    <!-- 主題切換按鈕 -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <script src="js/puzzle_script.js"></script>
+    <!-- <script src="js/puzzle_script_fixed.js"></script> -->
+    <script src="js/puzzle_vue.js"></script>
+    
+    <script>
+        // 主題切換功能
+        let isDarkMode = true;
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (isDarkMode) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                themeIcon.textContent = '🌙';
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeIcon.textContent = '☀️';
+            }
+            
+            // 保存主題設定到 localStorage
+            localStorage.setItem('puzzle-theme', isDarkMode ? 'dark' : 'light');
+        }
+
+        // 載入主題設定
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('puzzle-theme');
+            if (savedTheme) {
+                isDarkMode = savedTheme === 'dark';
+            }
+            
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (isDarkMode) {
+                body.classList.add('dark-theme');
+                themeIcon.textContent = '🌙';
+            } else {
+                body.classList.add('light-theme');
+                themeIcon.textContent = '☀️';
+            }
+        }
+
+        // 頁面載入完成後初始化主題
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+        });
+
+        // 鍵盤快捷鍵 - 按 T 切換主題
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 't' || event.key === 'T') {
+                toggleTheme();
+            }
+        });
+    </script>
+</body>
+
+</html>
