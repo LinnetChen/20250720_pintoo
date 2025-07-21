@@ -549,9 +549,10 @@ createApp({
       menuOpen: false,
       isDarkMode: true,
       selectedShape: '1',
+      selectedPieceCount: '25',
       events: [],
       autoStart: false,
-      gameState: 0, // 0: 顯示完整圖片, 1: 拼圖遊戲中
+      gameState: 0, // 0: 顯示完整圖片, 1: 拼圖遊戲中, 2: 遊戲完成
       showCompleteImage: true
     };
   },
@@ -595,6 +596,8 @@ createApp({
     loadDefaultImage() {
       console.log('Loading default image: baby1.jpg');
       this.puzzle.loadImage("baby1.jpg");
+      this.showFullImage();
+      this.menuOpen = false;
     },
     
     // 顯示完整圖片
@@ -602,12 +605,15 @@ createApp({
       this.showCompleteImage = true;
       this.gameState = 0;
       this.puzzle.showCompleteImage();
+      this.menuOpen = false;
     },
     
     // 開始拼圖遊戲
     startPuzzleGame() {
       this.showCompleteImage = false;
       this.gameState = 1;
+      // 使用選擇的片數開始遊戲
+      this.puzzle.changePieceCount(parseInt(this.selectedPieceCount));
       this.puzzle.startGame();
       this.menuOpen = false;
     },
@@ -625,15 +631,17 @@ createApp({
         reader.onload = (e) => {
           console.log('Custom image loaded');
           this.puzzle.loadImage(e.target.result);
+          this.showFullImage();
+          this.menuOpen = false;
         };
         reader.readAsDataURL(file);
       }
     },
     
-    // 改變拼圖片數
+    // 改變拼圖片數 (保留向後兼容性)
     changePieceCount(count) {
+      this.selectedPieceCount = count.toString();
       this.puzzle.changePieceCount(count);
-      this.startPuzzleGame();
     },
     
     // 改變形狀

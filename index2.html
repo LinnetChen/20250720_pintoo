@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼圖遊戲</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id="forPuzzle"></div>
+        
+        <!-- 響應式選單 -->
+        <nav id="menu" :class="{ 'menu-open': menuOpen }">
+            <div class="menu-header" @click="toggleMenu">
+                <span class="menu-icon">&#x2630;</span>
+                <span class="menu-title">選單</span>
+            </div>
+            
+            <div class="menu-content" v-show="menuOpen">
+                <div class="menu-item" @click="loadDefaultImage">
+                    <span class="menu-label">預設圖片</span>
+                </div>
+                
+                <div class="menu-item" @click="loadCustomImage">
+                    <span class="menu-label">載入圖片</span>
+                </div>
+                
+                <div class="menu-item">
+                    <label class="menu-label">形狀:</label>
+                    <select v-model="selectedShape" @change="changeShape" class="menu-select">
+                        <option value="1">經典</option>
+                        <option value="2">三角</option>
+                        <option value="3">圓形</option>
+                        <option value="4">直線</option>
+                    </select>
+                </div>
+                
+                <div class="menu-item">
+                    <label class="menu-label">拼圖片數:</label>
+                    <select v-model="selectedPieceCount" class="menu-select">
+                        <option value="12">12 片</option>
+                        <option value="25">25 片</option>
+                        <option value="50">50 片</option>
+                        <option value="100">100 片</option>
+                        <option value="150">150 片</option>
+                        <option value="200">200 片</option>
+                    </select>
+                </div>
+                
+                <div class="menu-item">
+                    <button 
+                        class="start-game-btn" 
+                        @click="startPuzzleGame"
+                        :disabled="gameState === 1"
+                    >
+                        {{ gameState === 1 ? '遊戲進行中' : '開始遊戲' }}
+                    </button>
+                </div>
+                
+                <div class="menu-item" v-if="gameState === 1" @click="showFullImage">
+                    <span class="menu-label">顯示完整圖片</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主題切換按鈕 -->
+        <button class="theme-toggle" @click="toggleTheme">
+            {{ isDarkMode ? '🌙' : '☀️' }}
+        </button>
+
+        <!-- 隱藏的檔案輸入 -->
+        <input 
+            type="file" 
+            ref="fileInput" 
+            @change="handleFileUpload" 
+            accept="image/*" 
+            style="display: none;"
+        >
+    </div>
+
+    <!-- <script src="js/puzzle_script.js"></script> -->
+    <script src="js/puzzle_vue.js"></script>
+
+</body>
+
+</html>
