@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 拼圖遊戲</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        #app {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .puzzle-game {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .puzzle-container {
+            width: 800px;
+            height: 600px;
+            position: relative;
+            margin: 0 auto;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+        }
+
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .menu h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-options label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .menu-options select {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .menu-options button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .menu-options button:hover {
+            background: #0056b3;
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+        }
+
+        .win-message h2 {
+            color: #28a745;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* 拼圖片樣式 */
+        .polypiece {
+            position: absolute;
+            cursor: grab;
+            transition: none;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .polypiece:hover {
+            filter: brightness(1.1);
+        }
+
+        .polypiece.moving {
+            transition: all 1s ease-out;
+        }
+
+        /* 完成動畫 */
+        .puzzle-complete-animation {
+            animation: puzzleComplete 2s ease-in-out;
+        }
+
+        @keyframes puzzleComplete {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); }
+            50% { transform: translate(-50%, -50%) scale(1.05) rotate(-5deg); }
+            75% { transform: translate(-50%, -50%) scale(1.1) rotate(3deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+
+        /* 載入動畫 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #666;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 900px) {
+            .puzzle-container {
+                width: 90vw;
+                height: 67.5vw;
+                max-width: 600px;
+                max-height: 450px;
+            }
+            
+            .menu {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <puzzle-game></puzzle-game>
+    </div>
+
+    <script src="js/puzzle_vue_converted.js"></script>
+    
+    <script>
+        // 確保在 DOM 載入完成後初始化 Vue 應用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 如果 puzzle_vue_converted.js 中的 Vue 應用還沒有掛載，則在這裡掛載
+            if (!window.vueApp) {
+                const { createApp } = Vue;
+                
+                // 確保 PuzzleGame 組件已定義
+                if (typeof PuzzleGame !== 'undefined') {
+                    window.vueApp = createApp({
+                        components: {
+                            PuzzleGame
+                        }
+                    }).mount('#app');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

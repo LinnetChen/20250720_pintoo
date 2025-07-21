@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 拼圖遊戲測試</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .puzzle-container {
+            width: 800px;
+            height: 600px;
+            position: relative;
+            margin: 20px auto;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+        }
+
+        .menu {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .menu h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .menu-options label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .menu-options select, .menu-options button {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .menu-options button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .menu-options button:hover {
+            background: #0056b3;
+        }
+
+        .polypiece {
+            position: absolute;
+            cursor: grab;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .polypiece:hover {
+            filter: brightness(1.1);
+        }
+
+        .polypiece.moving {
+            transition: all 1s ease-out;
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+        }
+
+        .win-message h2 {
+            color: #28a745;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="menu">
+            <h3>Vue 3 拼圖遊戲</h3>
+            <div class="menu-options">
+                <label>
+                    拼圖片數:
+                    <select v-model="nbPieces" @change="setPieceCount(nbPieces)">
+                        <option value="6">6 片</option>
+                        <option value="12">12 片</option>
+                        <option value="24">24 片</option>
+                        <option value="48">48 片</option>
+                    </select>
+                </label>
+                <button @click="restartGame">重新開始</button>
+                <button @click="loadImage('baby1.jpg')">載入圖片 1</button>
+                <button @click="loadImage('Jinu_2.jpg')">載入圖片 2</button>
+            </div>
+        </div>
+        
+        <div ref="puzzleContainer" class="puzzle-container">
+            <div v-if="!imageLoaded" class="loading">
+                載入中...
+            </div>
+        </div>
+        
+        <div v-if="isGameWon" class="win-message">
+            <h2>🎉 恭喜完成拼圖！🎉</h2>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        const PuzzleGame = {
+            data() {
+                return {
+                    // 遊戲狀態
+                    gameState: 0,
+                    autoStart: false,
+                    
+                    // 拼圖相關數據
+                    puzzle: null,
+                    nbPieces: 12,
+                    imageLoaded: false,
+                    
+                    // 移動相關數據
+                    moving: null,
+                    events: [],
+                    
+                    // 圖片相關
+                    srcImage: null,
+                    backImage: null
+                };
+            },
+            
+            computed: {
+                isGameWon() {
+                    return this.puzzle && this.puzzle.polyPieces && this.puzzle.polyPieces.length === 1;
+                },
+                
+                canStartGame() {
+                    return this.imageLoaded && this.nbPieces > 0;
+                }
+            },
+            
+            methods: {
+                // 初始化遊戲
+                initGame() {
+                    this.setupImages();
+                    this.setupEventListeners();
+                    this.gameState = 0;
+                    this.startGameLoop();
+                },
+                
+                // 設置圖片
+                setupImages() {
+                    this.backImage = new Image();
+                    this.backImage.src = "back.jpg";
+                    
+                    this.srcImage = new Image();
+                    this.srcImage.addEventListener("load", () => {
+                        this.imageLoaded = true;
+                        this.events.push({ event: "srcImageLoaded" });
+                    });
+                },
+                
+                // 設置事件監聽器
+                setupEventListeners() {
+                    const container = this.$refs.puzzleContainer;
+                    if (!container) return;
+                    
+                    // 滑鼠事件
+                    container.addEventListener("mousedown", this.handleMouseDown);
+                    container.addEventListener("mouseup", this.handleMouseUp);
+                    container.addEventListener("mousemove", this.handleMouseMove);
+                    container.addEventListener("mouseleave", this.handleMouseLeave);
+                    
+                    // 觸控事件
+                    container.addEventListener("touchstart", this.handleTouchStart, { passive: false });
+                    container.addEventListener("touchend", this.handleTouchEnd);
+                    container.addEventListener("touchmove", this.handleTouchMove, { passive: false });
+                    container.addEventListener("touchcancel", this.handleTouchCancel);
+                },
+                
+                // 事件處理器
+                handleMouseDown(event) {
+                    event.preventDefault();
+                    this.events.push({
+                        event: "touch",
+                        position: this.getRelativeCoordinates(event)
+                    });
+                },
+                
+                handleMouseUp(event) {
+                    event.preventDefault();
+                    this.events.push({ event: "leave" });
+                },
+                
+                handleMouseMove(event) {
+                    event.preventDefault();
+                    if (this.events.length && this.events[this.events.length - 1].event === "move") {
+                        this.events.pop();
+                    }
+                    this.events.push({
+                        event: "move",
+                        position: this.getRelativeCoordinates(event)
+                    });
+                },
+                
+                handleMouseLeave() {
+                    this.events.push({ event: "leave" });
+                },
+                
+                handleTouchStart(event) {
+                    event.preventDefault();
+                    if (event.touches.length !== 1) return;
+                    const touch = event.touches[0];
+                    this.events.push({
+                        event: "touch",
+                        position: this.getRelativeCoordinates(touch)
+                    });
+                },
+                
+                handleTouchEnd(event) {
+                    event.preventDefault();
+                    this.events.push({ event: "leave" });
+                },
+                
+                handleTouchMove(event) {
+                    event.preventDefault();
+                    if (event.touches.length !== 1) return;
+                    const touch = event.touches[0];
+                    if (this.events.length && this.events[this.events.length - 1].event === "move") {
+                        this.events.pop();
+                    }
+                    this.events.push({
+                        event: "move",
+                        position: this.getRelativeCoordinates(touch)
+                    });
+                },
+                
+                handleTouchCancel() {
+                    this.events.push({ event: "leave" });
+                },
+                
+                // 獲取相對座標
+                getRelativeCoordinates(event) {
+                    const container = this.$refs.puzzleContainer;
+                    const rect = container.getBoundingClientRect();
+                    return {
+                        x: event.clientX - rect.left,
+                        y: event.clientY - rect.top
+                    };
+                },
+                
+                // 開始遊戲循環
+                startGameLoop() {
+                    this.animate();
+                },
+                
+                // 簡化的動畫循環
+                animate() {
+                    const event = this.events.shift();
+                    
+                    switch (this.gameState) {
+                        case 0: // 初始狀態
+                            this.gameState = 10;
+                            break;
+                            
+                        case 10: // 等待圖片載入
+                            if (this.imageLoaded) {
+                                this.gameState = 15;
+                            }
+                            break;
+                            
+                        case 15: // 等待開始
+                            if (this.autoStart || (event && event.event === "nbpieces")) {
+                                this.gameState = 20;
+                                this.autoStart = false;
+                            }
+                            break;
+                            
+                        case 20: // 創建拼圖
+                            this.createSimplePuzzle();
+                            this.gameState = 50;
+                            break;
+                            
+                        case 50: // 遊戲進行中
+                            // 簡化的遊戲邏輯
+                            if (event && event.event === "nbpieces") {
+                                this.gameState = 20;
+                            }
+                            break;
+                    }
+                    
+                    requestAnimationFrame(() => this.animate());
+                },
+                
+                // 創建簡化的拼圖
+                createSimplePuzzle() {
+                    const container = this.$refs.puzzleContainer;
+                    container.innerHTML = "";
+                    
+                    // 創建簡單的拼圖片示例
+                    for (let i = 0; i < this.nbPieces; i++) {
+                        const piece = document.createElement("div");
+                        piece.style.position = "absolute";
+                        piece.style.width = "80px";
+                        piece.style.height = "80px";
+                        piece.style.background = `hsl(${i * 360 / this.nbPieces}, 70%, 60%)`;
+                        piece.style.border = "2px solid #333";
+                        piece.style.borderRadius = "10px";
+                        piece.style.left = Math.random() * (container.clientWidth - 80) + "px";
+                        piece.style.top = Math.random() * (container.clientHeight - 80) + "px";
+                        piece.style.cursor = "grab";
+                        piece.textContent = i + 1;
+                        piece.style.display = "flex";
+                        piece.style.alignItems = "center";
+                        piece.style.justifyContent = "center";
+                        piece.style.fontWeight = "bold";
+                        piece.style.color = "white";
+                        piece.style.textShadow = "1px 1px 2px rgba(0,0,0,0.5)";
+                        
+                        container.appendChild(piece);
+                    }
+                },
+                
+                // 載入圖片
+                loadImage(src) {
+                    this.imageLoaded = false;
+                    this.srcImage.src = src;
+                },
+                
+                // 設置拼圖片數
+                setPieceCount(count) {
+                    this.nbPieces = parseInt(count);
+                    this.events.push({ event: "nbpieces", nbpieces: this.nbPieces });
+                },
+                
+                // 重新開始遊戲
+                restartGame() {
+                    this.gameState = 20;
+                }
+            },
+            
+            mounted() {
+                this.initGame();
+                this.loadImage("Jinu_2.jpg");
+                // 自動開始
+                setTimeout(() => {
+                    this.autoStart = true;
+                }, 1000);
+            },
+            
+            beforeUnmount() {
+                // 清理事件監聽器
+                const container = this.$refs.puzzleContainer;
+                if (container) {
+                    container.removeEventListener("mousedown", this.handleMouseDown);
+                    container.removeEventListener("mouseup", this.handleMouseUp);
+                    container.removeEventListener("mousemove", this.handleMouseMove);
+                    container.removeEventListener("mouseleave", this.handleMouseLeave);
+                    container.removeEventListener("touchstart", this.handleTouchStart);
+                    container.removeEventListener("touchend", this.handleTouchEnd);
+                    container.removeEventListener("touchmove", this.handleTouchMove);
+                    container.removeEventListener("touchcancel", this.handleTouchCancel);
+                }
+            }
+        };
+
+        // 創建 Vue 應用
+        createApp(PuzzleGame).mount('#app');
+    </script>
+</body>
+</html>
