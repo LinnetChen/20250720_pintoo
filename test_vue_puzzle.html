@@ -6,12 +6,32 @@
     <title>Vue 3 拼圖遊戲測試</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-gradient-light: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --menu-bg-dark: rgba(255, 255, 255, 0.95);
+            --menu-bg-light: rgba(255, 255, 255, 0.95);
+            --menu-border-dark: transparent;
+            --menu-border-light: #333;
+            --menu-text-dark: #333;
+            --menu-text-light: #333;
+            --container-bg-dark: #f8f9fa;
+            --container-bg-light: #f8f9fa;
+            --container-border-dark: #dee2e6;
+            --container-border-light: #333;
+        }
+
         body {
             margin: 0;
             padding: 20px;
             font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient-dark);
             min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+
+        body.light-mode {
+            background: var(--bg-gradient-light);
         }
 
         .puzzle-container {
@@ -19,24 +39,43 @@
             height: 600px;
             position: relative;
             margin: 20px auto;
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
+            background: var(--container-bg-dark);
+            border: 2px solid var(--container-border-dark);
             border-radius: 10px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-mode .puzzle-container {
+            background: var(--container-bg-light);
+            border-color: var(--container-border-light);
         }
 
         .menu {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--menu-bg-dark);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             margin: 20px auto;
             max-width: 400px;
             text-align: center;
+            border: 2px solid var(--menu-border-dark);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .menu {
+            background: var(--menu-bg-light);
+            border-color: var(--menu-border-light);
+            color: var(--menu-text-light);
         }
 
         .menu h3 {
             margin: 0 0 15px 0;
-            color: #333;
+            color: var(--menu-text-dark);
+            transition: color 0.3s ease;
+        }
+
+        body.light-mode .menu h3 {
+            color: var(--menu-text-light);
         }
 
         .menu-options {
@@ -52,6 +91,11 @@
             gap: 5px;
             font-weight: bold;
             color: #555;
+            transition: color 0.3s ease;
+        }
+
+        body.light-mode .menu-options label {
+            color: #333;
         }
 
         .menu-options select, .menu-options button {
@@ -106,6 +150,37 @@
             font-size: 24px;
         }
 
+        /* 月亮按鈕樣式 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        body.light-mode .theme-toggle {
+            background: rgba(50, 50, 50, 0.9);
+            border-color: #fff;
+            color: #fff;
+        }
+
         .loading {
             display: flex;
             justify-content: center;
@@ -113,6 +188,65 @@
             height: 100%;
             font-size: 18px;
             color: #666;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 900px) {
+            body {
+                padding: 10px;
+            }
+
+            .puzzle-container {
+                width: 95vw;
+                height: 71.25vw;
+                max-width: 600px;
+                max-height: 450px;
+                margin: 10px auto;
+            }
+            
+            .menu {
+                margin: 10px auto;
+                max-width: 90vw;
+                padding: 15px;
+            }
+
+            .theme-toggle {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .menu {
+                padding: 12px;
+                border-radius: 8px;
+            }
+
+            .menu h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .menu-options {
+                gap: 10px;
+            }
+
+            .menu-options select,
+            .menu-options button {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .theme-toggle {
+                bottom: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -145,6 +279,11 @@
         <div v-if="isGameWon" class="win-message">
             <h2>🎉 恭喜完成拼圖！🎉</h2>
         </div>
+        
+        <!-- 主題切換按鈕 -->
+        <button class="theme-toggle" @click="toggleTheme" :title="isDarkMode ? '切換到淺色模式' : '切換到深色模式'">
+            {{ isDarkMode ? '☀️' : '🌙' }}
+        </button>
     </div>
 
     <script>
@@ -168,7 +307,10 @@
                     
                     // 圖片相關
                     srcImage: null,
-                    backImage: null
+                    backImage: null,
+                    
+                    // 主題相關
+                    isDarkMode: true
                 };
             },
             
@@ -379,10 +521,29 @@
                 // 重新開始遊戲
                 restartGame() {
                     this.gameState = 20;
+                },
+                
+                // 主題切換
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
+                    document.body.classList.toggle('light-mode', !this.isDarkMode);
+                    
+                    // 保存主題設定到 localStorage
+                    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+                },
+                
+                // 載入主題設定
+                loadTheme() {
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme) {
+                        this.isDarkMode = savedTheme === 'dark';
+                        document.body.classList.toggle('light-mode', !this.isDarkMode);
+                    }
                 }
             },
             
             mounted() {
+                this.loadTheme();
                 this.initGame();
                 this.loadImage("Jinu_2.jpg");
                 // 自動開始
